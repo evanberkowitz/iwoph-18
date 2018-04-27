@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+
+STASH_NAME="pre-commit-$(date +%s)"
+git stash save --keep-index  -q $STASH_NAME
+
+echo -n "Making based on latest commit..."
+
+pushd "$(git rev-parse --show-toplevel)" > /dev/null
+make master.pdf 1>/dev/null 2>/dev/null
+RESULT=$?
+popd > /dev/null
+
+LATEST_STASH_Q=$(git stash list | head -n 1 | grep -c "$STASH_NAME")
+
+if [[ $LATEST_STASH_Q == "1" ]]; then
+    git stash pop -q
+fi
+
+if [[ $RESULT -ne 0 ]]; then
+    echo "failed."
+    echo "Please ensure \`make master.pdf\` succeeds before committing."
+    exit 1
+fi
+
+echo "success!"
+exit 0
