@@ -1,5 +1,11 @@
 \begin{abstract}
-We're going to have a hard time without job management.
+
+Access to Leadership computing is required for HPC applications that require a large fraction of compute nodes for a single computation and also for use cases where the volume of smaller tasks can only be completed in a competitive or reasonable time frame through use of these Leadership computing facilities.
+In the latter case, a robust and lightweight manager is ideal so that all these tasks can be computed in a machine-friendly way, notably with minimal use of \texttt{jsrun} or equivalent to launch the executables (simple bundling of tasks can over-tax the service nodes and crash the entire scheduler).
+Our library, \mpijm, can manage such allocations, provided access to the requisite MPI functionality is provided.
+\mpijm is fault-tolerant against a modest number of down or non-communicative nodes, can begin executing work on smaller portions of a larger allocation before all nodes become available for the allocation, can manage GPU-intensive and CPU-only work independently and can overlay them peacefully on shared nodes.
+It is easily incorporated into existing MPI-capable executables, which then can run both independently and under \mpijm management.
+It provides a flexible Python interface, unlocking many high-level libraries, while also tightly binding users' executables to hardware.
 
 \keywords{Pilot systems \and Job management} 
 
