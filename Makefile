@@ -47,3 +47,6 @@ clean: clean_temporary_files
 	$(RM) $(GIT_STATUS)
 	$(RM) {$(DRAFT),$(MASTER)}.pdf
 
+.PHONY: watch
+watch:
+	watchman-make -p '**/*.tex' '*/*.tex' '*.tex' -t draft.pdf
