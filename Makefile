@@ -6,26 +6,32 @@ MASTER=master
 DRAFT=draft
 SECTIONS = $(shell ls -1 section/ | sed -e 's/^/section\//g')
 
+ifndef VERBOSE
+	REDIRECT=1>/dev/null 2>/dev/null
+endif
+
 $(DRAFT).pdf: $(SECTIONS) master.tex
+	@echo $@
 	make $(GIT_STATUS)
-	$(TEX) -jobname=$(DRAFT) master.tex
-	$(BIB) $(DRAFT)
-	$(TEX) -jobname=$(DRAFT) master.tex
-	$(TEX) -jobname=$(DRAFT) master.tex
+	$(TEX) -jobname=$(DRAFT) master.tex $(REDIRECT)
+	$(BIB) $(DRAFT) $(REDIRECT)
+	$(TEX) -jobname=$(DRAFT) master.tex $(REDIRECT)
+	$(TEX) -jobname=$(DRAFT) master.tex $(REDIRECT)
 	make clean_temporary_files
 
 master.pdf: $(SECTIONS) master.tex
-	echo "" > $(GIT_STATUS)
-	$(TEX) master.tex
-	$(BIB) master
-	$(TEX) master.tex
-	$(TEX) master.tex
+	@echo $@
+	echo "" > $(GIT_STATUS) $(REDIRECT)
+	$(TEX) master.tex $(REDIRECT)
+	$(BIB) master $(REDIRECT)
+	$(TEX) master.tex $(REDIRECT)
+	$(TEX) master.tex $(REDIRECT)
 	make clean_temporary_files
 
 .PHONY: $(GIT_STATUS)
 
-$(GIT_STATUS): 
-	./git_information.sh > $(GIT_STATUS)
+$(GIT_STATUS):
+	./git_information.sh | tee $(GIT_STATUS)
 
 .PHONY: git-hooks
 git-hooks:
