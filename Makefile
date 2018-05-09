@@ -49,4 +49,4 @@ clean: clean_temporary_files
 
 .PHONY: watch
 watch:
-	watchman-make -p '**/*.tex' '*/*.tex' '*.tex' -t draft.pdf
+	watchman-make -p '**/*.tex' '*/*.tex' '*.tex' '*.bib' -t draft.pdf
