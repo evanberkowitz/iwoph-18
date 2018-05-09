@@ -1,3 +1,23 @@
 \section{Introduction}
 
+The computational resources provided by the CORAL supercomputers provides challenges for efficient use.
+Some applications may need to scale to an \order{1} fraction of the whole machine for a single run of an executable, while others may need a variety of executables excuting heterogenous tasks that require different computational resources.  One example is lattice field theory, the numerical prescription for solving quantum field theories.
+
+We typically wish to study quantum field theories in continuum spacetime; with lattice methods we discretize spacetime and extrapolate to take the continuum limit.
+Computations are typically done in spacetime boxes with periodic boundary conditions, while we are interested in extrapolating to the infinite-volume result.
+Finally, the computational physicist may adjust the input parameters to the theory, if the physical parameters are too computationally costly, and attempt to extrapolate or interpolate to the true parameters.
+
+Each choice of discretization scale, volume size, and input parameters requires the generation of a stochastic ensemble of the spacetime configuration of the quantum field via importance sampling and `measurements' on each configuration in the ensemble.
+The configurations are stored and can be reused when computing other observables.
+
+The measurement step frequently requires linear solves of the \emph{Dirac matrix}.
+In the case of QCD, the theory of quarks and gluons, the Dirac matrix is a discretization-dependent (typically nearest-neighbor) stencil operator whose linear size is the number of spacetime points in the configuraiton.
+Each entry in that matrix is a $12\times12$ matrix which describes how quantities should be parallel transported around the lattice\footnote{12=(4 fermionic spin degrees of freedom)$\times$(3 fermionic \emph{color} degrees of freedom)}.
+Solving this linear system is often accomplished with numerical acceleration; the community library for nVidia GPUs is \quda\cite{Clark:2009wm,Babich:2011np}.
+
+We call the solutions \emph{propagators}, as they describe how quarks, described initially by the RHS of the solve, evolve.
+These propagators can be reused to compute many observables, and too are often stored.
+Different observables require different contractions.
+
+
 Our previous publications are \cite{Berkowitz:2017vcp,Berkowitz:2017xna}.
