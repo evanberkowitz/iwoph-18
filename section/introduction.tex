@@ -10,14 +10,40 @@ Finally, the computational physicist may adjust the input parameters to the theo
 Each choice of discretization scale, volume size, and input parameters requires the generation of a stochastic ensemble of the spacetime configuration of the quantum field via importance sampling and `measurements' on each configuration in the ensemble.
 The configurations are stored and can be reused when computing other observables.
 
-The measurement step frequently requires linear solves of the \emph{Dirac matrix}.
+Computing a single observable on a single configuration generally consists of two parts, \emph{solves} for quark propagators and \emph{tensor contractions}, building quantities out of one or more quark propagator.
+
+Solving for a propagator means solving the \emph{Dirac matrix}.
 In the case of QCD, the theory of quarks and gluons, the Dirac matrix is a discretization-dependent (typically nearest-neighbor) stencil operator whose linear size is the number of spacetime points in the configuraiton.
 Each entry in that matrix is a $12\times12$ matrix which describes how quantities should be parallel transported around the lattice\footnote{12=(4 fermionic spin degrees of freedom)$\times$(3 fermionic \emph{color} degrees of freedom)}.
 Solving this linear system is often accomplished with numerical acceleration; the community library for nVidia GPUs is \quda\cite{Clark:2009wm,Babich:2011np}.
 
-We call the solutions \emph{propagators}, as they describe how quarks, described initially by the RHS of the solve, evolve.
-These propagators can be reused to compute many observables, and too are often stored.
-Different observables require different contractions.
+The tensor contraction step may also be accelerated.
+However, in practice, the tensor contractions require substantially less numerical effort than propagator solves, and are largely site-parallel, and so it makes sense to perform them on CPU resources while the GPUs focus on solves.
 
+So, in one research project one may expect to run solves and contractions on a variety of different lattices spacings, with different sizes, and different input parameters.
+The time to complete a tensor contraction step depends only on the number of lattice sites, while time-to-solution for a quark propagator can depend on all three variables.
+For each ensemble, one hopes to take thousands to millions of measurements.
 
-Our previous publications are \cite{Berkowitz:2017vcp,Berkowitz:2017xna}.
+Modern lattice QCD calculations are performed on lattices of dimension $(48-96)^3\times(48-128) \sim 2^24$ sites.
+On CORAL resources, solves on large lattices can be performed with just a few nodes (meaning 8 or 16 or 32, but certainly not 1024).
+Thus, it is unlikely that LQCD can effectively use a large fraction of a CORAL machine without the ability to finely manage a large allocation, running different problems instances and problem sizes simultaneously, independently executing tensor contractions from propagator solves, and creating new work as work is completed, intellegently back-filling an allocation to ensure very little time is wasted idling.
+Executing contractions on the CPUs while the GPUs solve for propagators effectively amortizes the cost of the contractions, yielding a large effective savings.
+
+We developed \metaq \cite{Berkowitz:2017vcp,Berkowitz:2017xna}, a suite of \bash scripts that sits between the batch scheduler and the user.
+Tasks are described by scripts that, much like a job script for a batch scheduler, describes the needed resources and the anticipated amount of wall-clock time needed to complete the task.
+In the job script submitted to the batch scheduler the user describes to \metaq the available resources, and which are then consumed by as many tasks as can peacefully coexist in the allocation.
+We have used \metaq in the production of a variety of LQCD results\cite{Nicholson:2016byl,Berkowitz:2017opd,Chang:2017oll,Berkowitz:2017gql,Chang:2018gA}.
+
+Separating the description of work from the description of the job itself has a number of benefits: multiple collaborators may all submit tasks that can be accomplished by a single job, and the waiting tasks may be adjusted or entirely changed between the submission of the job script and the tasks' execution, even while the job is running.
+Additionally, tasks launched by \metaq are robust, in the sense that the tasks are independent: if one fails the others continue happily and the relinquished resources may be dedicated to a new task.
+
+However, \metaq has serious shortcomings.
+First, it requires the user to honestly and accurately describe the needed resources---if the user makes an error, the available resources may be oversubscribed, yielding a performance hit.
+Second, the ability to separately assign work to the GPUs and CPUs depends on administrative policy---amortization of the CPU work may not be possible.
+Third, the tasks themselves aren't flexible, in that if a task could run in two different configurations with acceptable performance, there is no natural way to \metaq of these different possibilities.
+Fourth, each task executes a separate \texttt{mpirun} (or batch-scheduler equivalent), putting a lot of stress on the service nodes of the machine, a serious concern for CORAL-scale machines.
+
+Finally \metaq has no tight integration with or knowledge of the actual hardware in a machine.
+As resources are dedicated and freed by tasks, a suboptimal group of nodes may be set to a task---if they are far apart in terms of communication, for example---reducing performance.
+
+The success of \metaq in production, and the drawbacks just mentioned, motivated us to develop \mpijm, a C library that overcomes these drawbacks at minimal cost.
