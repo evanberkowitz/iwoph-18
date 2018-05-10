@@ -1,2 +1,11 @@
-\section{The Python Interface}
+\section{Individual Tasks and the Python Interface}
+\label{sec:python}
 
+The scheduler contains a \python interpreter and exposes an interface to the work queue.
+In \python, one simply creates a new job object that is naturally in an unstaged state.
+The user provides information about the work, such as which executable to use, what environment to provide, what parameters to provide, the required resouces and wallclock time, a priority flag, and what callbacks to execute before launching the task and after its completion.
+Then, the user queues the job, at which point \jmscheduler may deploy it to a block for execution.
+
+We expect to provide a \metaq-like set of routines, where the user can describe their work in \texttt{yaml}\cite{YAML} files.
+However, because the description of work is accomplished via \python, many more advanced methods are be possible.
+For example, to create work one may access databases, other pilot programs\cite{taxi1,taxi2}, or can create work in other tasks' callbacks.
