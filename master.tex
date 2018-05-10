@@ -5,11 +5,13 @@
 \graphicspath{{figure/}}
 \usepackage{xspace}
 \usepackage{xcolor}
+\usepackage{hyperref}
 
 % Software
 \newcommand{\bash}{\texttt{bash}\xspace}
 \newcommand{\metaq}{\texttt{METAQ}\xspace}
 \newcommand{\quda}{\texttt{QUDA}\xspace}
+\newcommand{\python}{\texttt{python}\xspace}
 
 % MPI
 \newcommand{\mpirun}{\texttt{mpirun}\xspace}
@@ -27,6 +29,13 @@
 \newcommand{\jmworker}{\texttt{libjm\_worker}\xspace}
 \newcommand{\jmhandshake}{\texttt{jm\_parent\_handshake}\xspace}
 \newcommand{\jmfinish}{\texttt{jm\_finish}\xspace}
+
+% References
+\newcommand{\figref}[1]{Fig.~\ref{fig:#1}}
+\newcommand{\Figref}[1]{Figure~\ref{fig:#1}}
+\newcommand{\secref}[1]{Sec.~\ref{sec#1}}
+\newcommand{\Secref}[1]{Section~\ref{sec:#1}}
+
 
 % Math
 \newcommand{\order}[1]{\ensuremath{\mathcal{O}\left(#1\right)}\xspace}
