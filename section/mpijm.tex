@@ -9,6 +9,13 @@ The master \jmmaster is launched on every node, and is responsible for launching
 The scheduler \jmscheduler is a single process that tracks the available resources, manages a queue of computational tasks, distributes those tasks to nodes, and collect status.
 The workers are the user applications that will execute the computational work, linked against a library \jmworker.
 
+\begin{figure}[t]
+    \centering
+        \includegraphics[width=\textwidth]{jm_example.png}
+    \caption{An example 32-node layout, with four blocks of eight nodes.  Every node launches \jmmaster (m), one \jmscheduler (s) is spawned, and workers of different sizes (A, B, C, D) and requiring different resources are launched.  In this case, worker A consumes all the resources in a block, while B, C, and D can peacefully coexist in a block.  Perhaps D requires GPUs but only a few CPU cores, while B and C are CPU-intensive.}
+    \label{fig:jm_example}
+\end{figure}
+
 \subsection{Masters}
 
 \jmmaster is launched across the entire allocation with \mpirun (or equivalent), with one MPI task per node.
@@ -25,3 +32,6 @@ One also adds \jmfinish just before \mpifinalize, allowing the worker to communi
 When workers are launched by the master via \spawn, they perform said handshake and reporting.
 When workers are launched independently, they skip those steps, enabling the same binary to be launched in both ways.
 This flexibility makes \mpijm-enabled applications easy to maintain, while also ensuring the same binary is executed during debugging as is executed during production.
+
+\subsection{Dependencies}
+
