@@ -5,10 +5,29 @@
 \usepackage{xspace}
 \usepackage{xcolor}
 
+% Software
 \newcommand{\bash}{\texttt{bash}\xspace}
 \newcommand{\metaq}{\texttt{METAQ}\xspace}
-\newcommand{\mpijm}{\texttt{mpi\_jm}\xspace}
 \newcommand{\quda}{\texttt{QUDA}\xspace}
+
+% MPI
+\newcommand{\mpirun}{\texttt{mpirun}\xspace}
+\newcommand{\spawn}{\texttt{MPI\_Comm\_spawn}\xspace}
+\newcommand{\mpicommworld}{\texttt{MPI\_COMM\_WORLD}\xspace}
+\newcommand{\mpiinit}{\texttt{MPI\_Init}\xspace}
+\newcommand{\mpiabort}{\texttt{MPI\_Abort}\xspace}
+\newcommand{\mpifinalize}{\texttt{MPI\_Finalize}\xspace}
+
+% JM
+\newcommand{\mpijm}{\texttt{mpi\_jm}\xspace}
+\newcommand{\jm}{\mpijm}
+\newcommand{\jmmaster}{\texttt{jm\_master}\xspace}
+\newcommand{\jmscheduler}{\texttt{jm\_sched}\xspace}
+\newcommand{\jmworker}{\texttt{libjm\_worker}\xspace}
+\newcommand{\jmhandshake}{\texttt{jm\_parent\_handshake}\xspace}
+\newcommand{\jmfinish}{\texttt{jm\_finish}\xspace}
+
+% Math
 \newcommand{\order}[1]{\ensuremath{\mathcal{O}\left(#1\right)}\xspace}
 
 \begin{document}
@@ -41,6 +60,8 @@ Lawrence Berkeley National Laboratory, Berkeley CA 94720
 
 \input{section/abstract}
 \input{section/introduction}
+\input{section/mpijm}
+\input{section/python}
 \input{section/acknowledgements}
 
 \bibliographystyle{splncs04}

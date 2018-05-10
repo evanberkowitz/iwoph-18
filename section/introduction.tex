@@ -41,7 +41,7 @@ However, \metaq has serious shortcomings.
 First, it requires the user to honestly and accurately describe the needed resources---if the user makes an error, the available resources may be oversubscribed, yielding a performance hit.
 Second, the ability to separately assign work to the GPUs and CPUs depends on administrative policy---amortization of the CPU work may not be possible.
 Third, the tasks themselves aren't flexible, in that if a task could run in two different configurations with acceptable performance, there is no natural way to \metaq of these different possibilities.
-Fourth, each task executes a separate \texttt{mpirun} (or batch-scheduler equivalent), putting a lot of stress on the service nodes of the machine, a serious concern for CORAL-scale machines.
+Fourth, each task executes a separate \mpirun (or batch-scheduler equivalent), putting a lot of stress on the service nodes of the machine, a serious concern for CORAL-scale machines.
 
 Finally \metaq has no tight integration with or knowledge of the actual hardware in a machine.
 As resources are dedicated and freed by tasks, a suboptimal group of nodes may be set to a task---if they are far apart in terms of communication, for example---reducing performance.
