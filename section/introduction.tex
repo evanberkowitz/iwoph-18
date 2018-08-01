@@ -1,6 +1,6 @@
 \section{Introduction}
 
-The computational resources provided by the CORAL supercomputers provides challenges for efficient use.
+The enormous power of the CORAL supercomputers Summit and Sierra, OpenPOWER machines with nVIDIA GPUs, provides challenges for efficient use\cite{summit,sierra}.
 Some applications may need to scale to an \order{1} fraction of the whole machine for a single run of an executable, while others may need a variety of executables excuting heterogenous tasks that require different computational resources.  One example is lattice field theory, the numerical prescription for solving quantum field theories.
 
 We typically wish to study quantum field theories in continuum spacetime; with lattice methods we discretize spacetime and extrapolate to take the continuum limit.
@@ -15,7 +15,7 @@ Computing a single observable on a single configuration generally consists of tw
 Solving for a propagator means solving the \emph{Dirac matrix}.
 In the case of QCD, the theory of quarks and gluons, the Dirac matrix is a discretization-dependent (typically nearest-neighbor) stencil operator whose linear size is the number of spacetime points in the configuraiton.
 Each entry in that matrix is a $12\times12$ matrix which describes how quantities should be parallel transported around the lattice\footnote{12=(4 fermionic spin degrees of freedom)$\times$(3 fermionic \emph{color} degrees of freedom)}.
-Solving this linear system is often accomplished with numerical acceleration; the community library for nVidia GPUs is \quda\cite{Clark:2009wm,Babich:2011np}.
+Solving this linear system is often accomplished with numerical acceleration; the community library for nVIDIA GPUs is \quda\cite{Clark:2009wm,Babich:2011np}.
 
 The tensor contraction step may also be accelerated.
 However, in practice, the tensor contractions require substantially less numerical effort than propagator solves, and are largely site-parallel, and so it makes sense to perform them on CPU resources while the GPUs focus on solves.
