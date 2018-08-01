@@ -30,9 +30,9 @@ Just one instance of the scheduler is started, via \spawn (on the upper-left nod
 It loads configuration information about the machine and assigns the masters to blocks with good communication performance.
 
 After initialization, \jmscheduler begins to collect computational tasks, constructing a queue of work.
-Each task knows a1
+Each task might know a variety of hardware resources that it can run on efficiently.
 
-It matches work with available resources, performs a task-specific callback, dispatches them to the relevant block subcommunicator's rank-0 process, which starts the job via \spawn.
+The scheduler matches work with available resources, performs a task-specific callback, dispatches them to the relevant block subcommunicator's rank-0 process, which starts the job via \spawn.
 When the task is complete and the resources are marked free, another task-specific callback is made, so that logging, clean-up, or even the creation of new computational tasks can be accomplished.
 
 
@@ -55,7 +55,9 @@ Most executables perform only minimal work (such as simple initialization, readi
 
 As it happens, many MPI implementations do not currently respect the specification, and the \spawn parent may abort if its child aborts, even after disconnection.\footnote{Bug reports are in the works, and we are exploring alternate architecture using other aspects of the MPI specification.}
 
-The SpectrumMPI installed on the CORAL systems\footnote{(as of the beginning of May, 2018)} do not yet support \spawn, and other MPI libraries are not as highly optimized for these systems, yielding a $\sim$20\% performance hit in our initial tests.
+The SpectrumMPI installed on the CORAL systems\footnote{(as of the beginning of August, 2018)} do not yet support \spawn, and other MPI libraries are not as highly optimized for these systems, yielding a $\sim$20\% performance hit in our initial tests.
 We hope to have \spawn incorporated in the acceptance regimen for Summit at Oak Ridge.
+Further investigation has shown that SpectrumMPI inherited a problem from OpenMPI that keeps \spawn from completely disconnecting, keeping the resilience against individual task failure from succeeding.
+In our latest tests using MVAPICH 2.3 we seem to achieve only a 1\% slowdown when compared to the native SpectrumMPI and a correct adherence to the MPI standard.
 
 \mpijm also depends on a \python installation, as will be discussed in \secref{python}.
